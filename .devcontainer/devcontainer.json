@@ -1,0 +1,7 @@
+{
+	"name": "dev spring-boot-loan",
+	"dockerComposeFile": ["./compose.yml", "./kafka-compose.yml"],
+	"service": "spring-boot-loan",
+	"workspaceFolder": "/app",
+	"shutdownAction": "stopCompose"
+}
