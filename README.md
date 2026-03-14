@@ -29,12 +29,30 @@ The project consists of 3 microservices:
 
 ## Build
 
+The project uses a parent POM to manage all modules. Build from the root:
+
 ```bash
-cd shared-events && mvn install
-cd loan-service && mvn spring-boot:run
-cd risk-service && mvn spring-boot:run
-cd payment-service && mvn spring-boot:run
+# Build and install all modules
+mvn clean install
 ```
+
+Or build from root with Spring Boot:
+
+```bash
+# Terminal 1 - loan-service (port 8080)
+mvn -pl loan-service spring-boot:run
+
+# Terminal 2 - risk-service (port 8081)
+mvn -pl risk-service spring-boot:run
+
+# Terminal 3 - payment-service (port 8082)
+mvn -pl payment-service spring-boot:run
+```
+
+## Prerequisites
+
+- Kafka running on localhost:9092
+- Start Kafka with: `cd .devcontainer && docker-compose -f kafka-compose.yml up -d`
 
 ## Usage
 
