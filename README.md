@@ -13,7 +13,45 @@ The project consists of 3 microservices:
 
 ## Saga Flow
 
-1. Client creates a loan request via `POST /api/loans`
+```mermaid
+sequenceDiagram
+    participant Client
+    participant loan-service
+    participant Kafka
+    participant risk-service
+    participant payment-service
+
+    Client->>loan-service: POST /api/loans
+    loan-service->>loan-service: Create Loan (PENDING)
+    loan-service->>Kafka: LoanRequested
+    Kafka->>risk-service: Consume LoanRequested
+    risk-service->>risk-service: Evaluate Risk
+    
+    alt Risk Approved
+        risk-service->>Kafka: RiskApproved
+        Kafka->>payment-service: Consume RiskApproved
+        payment-service->>payment-service: Reserve Funds
+        
+        alt Funds Reserved
+            payment-service->>Kafka: FundsReserved
+            Kafka->>loan-service: Consume FundsReserved
+            loan-service->>loan-service: Update to APPROVED
+            loan-service-->>Client: Loan Approved
+        else Funds Failed
+            payment-service->>Kafka: FundsFailed
+            Kafka->>loan-service: Consume FundsFailed
+            loan-service->>loan-service: Update to FAILED
+            loan-service-->>Client: Loan Failed
+        end
+    else Risk Rejected
+        risk-service->>Kafka: RiskRejected
+        Kafka->>loan-service: Consume RiskRejected
+        loan-service->>loan-service: Update to REJECTED
+        loan-service-->>Client: Loan Rejected
+    end
+```
+
+**Compensation**: On failure at any step, the saga publishes a compensating event to rollback the previous steps.
 2. `loan-service` publishes `LoanRequested` event to Kafka
 3. `risk-service` consumes the event, evaluates risk, publishes `RiskApproved` or `RiskRejected`
 4. `payment-service` consumes `RiskApproved`, processes payment, publishes `FundsReserved` or `FundsFailed`
