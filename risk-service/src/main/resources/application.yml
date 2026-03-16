@@ -2,7 +2,7 @@ server.port: 8081
 
 spring:
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: broker:9092
     consumer:
       group-id: risk-group
       auto-offset-reset: earliest
