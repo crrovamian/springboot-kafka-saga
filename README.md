@@ -89,7 +89,7 @@ mvn -pl payment-service spring-boot:run
 
 ## Prerequisites
 
-- Kafka running on localhost:9092
+- Kafka running on broker:9092
 - Start Kafka with: `cd .devcontainer && docker-compose -f kafka-compose.yml up -d`
 
 ## Usage
@@ -105,3 +105,10 @@ curl -X POST http://localhost:8080/api/loans \
 - `cust-001`: LOW risk, $50,000 limit
 - `cust-002`: MEDIUM risk, $30,000 limit
 - `cust-003`: HIGH risk (rejected automatically)
+
+## OpenAPI / Swagger
+
+Each service exposes OpenAPI documentation:
+
+- **loan-service**: http://localhost:8080/swagger-ui.html
+- **loan-service** (JSON): http://localhost:8080/v3/api-docs

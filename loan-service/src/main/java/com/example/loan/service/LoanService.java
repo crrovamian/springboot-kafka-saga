@@ -7,6 +7,7 @@ import com.example.events.LoanRequested;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -36,6 +37,10 @@ public class LoanService {
 
     public Optional<Loan> getLoan(String id) {
         return loanRepository.findById(id);
+    }
+
+    public List<Loan> getAllLoans() {
+        return loanRepository.findAll();
     }
 
     public void updateLoanStatus(String loanId, String status) {
