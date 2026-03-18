@@ -13,24 +13,8 @@ The project consists of 3 microservices:
 
 ## Saga Flow
 
-%%{init: {'theme': 'base', 'themeVariables': {
-  'actorBkg':             '#534ab7',
-  'actorBorder':          '#26215c',
-  'actorTextColor':       '#ffffff',
-  'actorLineColor':       '#afa9ec',
-  'signalColor':          '#22c55e',
-  'signalTextColor':      '#166534',
-  'noteBkgColor':         '#faeeda',
-  'noteBorderColor':      '#854f0b',
-  'noteTextColor':        '#633806',
-  'labelBoxBkgColor':     '#e1f5ee',
-  'labelBoxBorderColor':  '#0f6e56',
-  'labelTextColor':       '#085041',
-  'loopTextColor':        '#085041',
-  'activationBkgColor':   '#eeedfe',
-  'activationBorderColor':'#534ab7'
-}}}%%
 ```mermaid
+%%{init: {'themeCSS': '.messageLine0:nth-of-type(4) { stroke: #22c55e; stroke-width: 3px; }; .messageLine0:nth-of-type(5) { stroke: #22c55e; stroke-width: 3px; }; .messageLine0:nth-of-type(6) { stroke: #22c55e; stroke-width: 3px; }; .messageLine0:nth-of-type(7) { stroke: #22c55e; stroke-width: 3px; }; .messageLine0:nth-of-type(8) { stroke: #22c55e; stroke-width: 3px; }; .messageLine0:nth-of-type(9) { stroke: #dc3545; stroke-width: 3px; }; .messageLine0:nth-of-type(10) { stroke: #dc3545; stroke-width: 3px; }; .messageLine0:nth-of-type(11) { stroke: #dc3545; stroke-width: 3px; }; .messageLine0:nth-of-type(12) { stroke: #dc3545; stroke-width: 3px; }; .messageLine0:nth-of-type(13) { stroke: #dc3545; stroke-width: 3px; }; .messageLine0:nth-of-type(14) { stroke: #dc3545; stroke-width: 3px; }'}}%%
 sequenceDiagram
     participant Client
     participant loan-service
