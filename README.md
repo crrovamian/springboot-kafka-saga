@@ -13,6 +13,23 @@ The project consists of 3 microservices:
 
 ## Saga Flow
 
+%%{init: {'theme': 'base', 'themeVariables': {
+  'actorBkg':             '#534ab7',
+  'actorBorder':          '#26215c',
+  'actorTextColor':       '#ffffff',
+  'actorLineColor':       '#afa9ec',
+  'signalColor':          '#22c55e',
+  'signalTextColor':      '#166534',
+  'noteBkgColor':         '#faeeda',
+  'noteBorderColor':      '#854f0b',
+  'noteTextColor':        '#633806',
+  'labelBoxBkgColor':     '#e1f5ee',
+  'labelBoxBorderColor':  '#0f6e56',
+  'labelTextColor':       '#085041',
+  'loopTextColor':        '#085041',
+  'activationBkgColor':   '#eeedfe',
+  'activationBorderColor':'#534ab7'
+}}}%%
 ```mermaid
 sequenceDiagram
     participant Client
