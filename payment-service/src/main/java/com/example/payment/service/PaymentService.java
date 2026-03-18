@@ -44,6 +44,6 @@ public class PaymentService {
     }
 
     private boolean reserveFunds(Payment payment) {
-        return Math.random() > 0.1;
+        return Math.random() > 0.33;
     }
 }
