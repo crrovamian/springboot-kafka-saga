@@ -1,4 +1,4 @@
-# Spring Boot Kafka Saga Example
+# Spring Boot Kafka Saga
 
 A distributed saga pattern implementation using Spring Boot and Apache Kafka.
 
