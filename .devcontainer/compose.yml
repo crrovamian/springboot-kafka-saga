@@ -11,12 +11,18 @@ services:
       args:
         - GIT_USER_EMAIL=${GIT_USER_EMAIL}
         - GIT_USER_NAME=${GIT_USER_NAME}
+
+    user: "${UID}:${GID}"
+
     volumes:
-      - ../:/app
+      - ../:/workspace
       # lazyvim
       - ${SSH_AUTH_SOCK}:/ssh-agent
-      - ~/.ssh/known_hosts:/root/.ssh/known_hosts:ro
-      - ../.lazyvim/plugins:/root/.config/nvim/lua/plugins:cached
+      - ~/.ssh/known_hosts:/home/${USERNAME}/.ssh/known_hosts:ro
+      # - ../.lazyvim/plugins:/home/${USERNAME}/.config/nvim/lua/plugins:cached
+      # - ../.lazyvim/config/keymaps.lua:/home/${USERNAME}/.config/nvim/lua/config/keymaps.lua
+      # - ../.lazyvim/config/options.lua:/home/${USERNAME}/.config/nvim/lua/config/options.lua
+      # - ../.lazyvim/config/autocmds.lua:/home/${USERNAME}/.config/nvim/lua/config/autocmds.lua
       - ${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}:${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}
 
     environment:
