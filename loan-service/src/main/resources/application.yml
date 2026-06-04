@@ -20,6 +20,20 @@ spring:
       properties:
         spring.json.trusted.packages: com.example.events
 
+resilience4j:
+  retry:
+    instances:
+      loanRetry:
+        max-attempts: 3
+        wait-duration: 500ms
+  circuitbreaker:
+    instances:
+      loanConsumerCircuitBreaker:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 3
+
 logging:
   level:
     org.apache.kafka: WARN

@@ -5,23 +5,26 @@ import com.example.events.RiskApproved;
 import com.example.events.FundsReserved;
 import com.example.events.FundsFailed;
 import com.example.payment.kafka.PaymentProducer;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Service
 public class PaymentService {
     private final PaymentProducer paymentProducer;
+    private final ReserveFundsService reserveFundsService;
 
-    public PaymentService(PaymentProducer paymentProducer) {
+    public PaymentService(PaymentProducer paymentProducer, ReserveFundsService reserveFundsService) {
         this.paymentProducer = paymentProducer;
+        this.reserveFundsService = reserveFundsService;
     }
 
+    @CircuitBreaker(name = "paymentCircuitBreaker")
     public void processPayment(RiskApproved event) {
         Payment payment = new Payment(event.getLoanId(), event.getCustomerId(), event.getAmount(), "PROCESSING");
-        
-        boolean success = reserveFunds(payment);
-        
+
+        boolean success = reserveFundsService.reserveFunds(payment);
+
         if (success) {
             FundsReserved fundsReserved = new FundsReserved(
                 event.getLoanId(),
@@ -41,9 +44,5 @@ public class PaymentService {
             );
             paymentProducer.sendFundsFailed(fundsFailed);
         }
-    }
-
-    private boolean reserveFunds(Payment payment) {
-        return Math.random() > 0.33;
     }
 }

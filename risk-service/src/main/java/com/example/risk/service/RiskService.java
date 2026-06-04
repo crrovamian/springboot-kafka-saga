@@ -4,6 +4,7 @@ import com.example.risk.entity.Customer;
 import com.example.events.LoanRequested;
 import com.example.events.RiskApproved;
 import com.example.events.RiskRejected;
+import io.github.resilience4j.retry.annotation.Retry;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ public class RiskService {
         customers.put("cust-003", new Customer("cust-003", "Bob Johnson", "HIGH", new BigDecimal("10000")));
     }
 
+    @Retry(name = "riskRetry")
     public boolean evaluateRisk(LoanRequested loanRequest) {
         Customer customer = customers.get(loanRequest.getCustomerId());
         
