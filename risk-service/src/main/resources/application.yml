@@ -10,9 +10,12 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: com.example.events
+        interceptor.classes: io.opentelemetry.instrumentation.kafkaclients.v2_6.TracingConsumerInterceptor
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        interceptor.classes: io.opentelemetry.instrumentation.kafkaclients.v2_6.TracingProducerInterceptor
 
 resilience4j:
   retry:
@@ -25,3 +28,9 @@ logging:
   level:
     org.apache.kafka: WARN
     com.example: DEBUG
+
+# OpenTelemetry
+# OTEL_SERVICE_NAME=risk-service
+# OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+# OTEL_TRACES_EXPORTER=otlp
+# OTEL_PROPAGATORS=tracecontext,baggage

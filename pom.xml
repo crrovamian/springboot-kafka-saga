@@ -29,6 +29,8 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <resilience4j.version>2.1.0</resilience4j.version>
+        <opentelemetry.version>1.38.0</opentelemetry.version>
+        <opentelemetry-instrumentation-alpha.version>1.33.0-alpha</opentelemetry-instrumentation-alpha.version>
     </properties>
 
     <dependencyManagement>
@@ -37,6 +39,20 @@
                 <groupId>io.github.resilience4j</groupId>
                 <artifactId>resilience4j-bom</artifactId>
                 <version>${resilience4j.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.opentelemetry</groupId>
+                <artifactId>opentelemetry-bom</artifactId>
+                <version>${opentelemetry.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.opentelemetry.instrumentation</groupId>
+                <artifactId>opentelemetry-instrumentation-bom-alpha</artifactId>
+                <version>${opentelemetry-instrumentation-alpha.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
