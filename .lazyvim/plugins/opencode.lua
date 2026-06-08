@@ -1,21 +1,31 @@
 return {
 	"NickvanDyke/opencode.nvim",
 	dependencies = {
-		{ "folke/snacks.nvim", opts = { input = {}, picker = {}, terminal = {} } },
+		{
+			"folke/snacks.nvim",
+			opts = {
+				input = {},
+				picker = {},
+				terminal = {},
+			},
+		},
 	},
 	keys = {
+		-- Toggle: ahora va por snacks.terminal directamente
 		{
 			"<leader>aa",
 			function()
-				require("opencode").toggle()
+				local cmd = "opencode --port"
+				local opts = { win = { position = "right", enter = false } }
+				require("snacks.terminal").toggle(cmd, opts)
 			end,
-			mode = { "n" },
+			mode = { "n", "t" },
 			desc = "Toggle OpenCode",
 		},
 		{
 			"<leader>as",
 			function()
-				require("opencode").select({ submit = true })
+				require("opencode").select()
 			end,
 			mode = { "n", "x" },
 			desc = "OpenCode select",
@@ -23,7 +33,7 @@ return {
 		{
 			"<leader>ai",
 			function()
-				require("opencode").ask("", { submit = true })
+				require("opencode").ask("", { submit = false })
 			end,
 			mode = { "n", "x" },
 			desc = "OpenCode ask",
@@ -39,7 +49,7 @@ return {
 		{
 			"<leader>ab",
 			function()
-				require("opencode").ask("@file ", { submit = true })
+				require("opencode").ask("@buffer ", { submit = true })
 			end,
 			mode = { "n", "x" },
 			desc = "OpenCode ask about buffer",
@@ -72,7 +82,7 @@ return {
 		{
 			"<leader>apd",
 			function()
-				require("opencode").prompt("diagnose", { submit = true })
+				require("opencode").prompt("diagnostics", { submit = true })
 			end,
 			mode = { "n", "x" },
 			desc = "OpenCode diagnose",
@@ -103,15 +113,34 @@ return {
 		},
 	},
 	config = function()
-		vim.g.opencode_opts = {
-			provider = {
-				snacks = {
-					win = {
-						position = "left",
-					},
-				},
+		local cmd = "opencode --port"
+		local win_opts = {
+			win = {
+				position = "right",
+				enter = false, -- no roba el foco al abrir
+				on_win = function(win)
+					require("opencode.terminal").setup(win.win)
+				end,
 			},
 		}
+
+		vim.g.opencode_opts = {
+			server = {
+				start = function()
+					require("snacks.terminal").open(cmd, win_opts)
+				end,
+				stop = function()
+					local t = require("snacks.terminal").get(cmd, win_opts)
+					if t then
+						t:close()
+					end
+				end,
+				toggle = function()
+					require("snacks.terminal").toggle(cmd, win_opts)
+				end,
+			},
+		}
+
 		vim.o.autoread = true
 	end,
 }
