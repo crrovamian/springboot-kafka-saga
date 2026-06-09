@@ -30,7 +30,5 @@ logging:
     com.example: DEBUG
 
 # OpenTelemetry
-# OTEL_SERVICE_NAME=risk-service
-# OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
-# OTEL_TRACES_EXPORTER=otlp
-# OTEL_PROPAGATORS=tracecontext,baggage
+otel:
+  service-name: risk-service

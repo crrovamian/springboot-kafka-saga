@@ -31,4 +31,16 @@ services:
       XDG_RUNTIME_DIR: ${XDG_RUNTIME_DIR}
  
     ports:
-      - 8080:8080
+      - 9080:9080
+    networks:
+      - monitoring
+      - kafka-net
+
+
+networks:
+  monitoring:
+    external: true
+  kafka-net:
+    external: true
+
+# docker network create monitoring

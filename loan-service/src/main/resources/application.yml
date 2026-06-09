@@ -1,4 +1,4 @@
-server.port: 8080
+server.port: 9080
 
 spring:
   datasource:
@@ -43,7 +43,5 @@ logging:
     com.example: DEBUG
 
 # OpenTelemetry
-# OTEL_SERVICE_NAME=loan-service
-# OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
-# OTEL_TRACES_EXPORTER=otlp
-# OTEL_PROPAGATORS=tracecontext,baggage
+otel:
+  service-name: loan-service

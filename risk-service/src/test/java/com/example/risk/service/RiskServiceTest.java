@@ -1,10 +1,16 @@
 package com.example.risk.service;
 
 import com.example.events.LoanRequested;
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.SpanBuilder;
+import io.opentelemetry.api.trace.Tracer;
+import io.opentelemetry.context.Scope;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 class RiskServiceTest {
 
@@ -12,7 +18,15 @@ class RiskServiceTest {
 
     @BeforeEach
     void setUp() {
-        riskService = new RiskService();
+        Tracer tracer = mock(Tracer.class);
+        SpanBuilder spanBuilder = mock(SpanBuilder.class);
+        Span span = mock(Span.class);
+        when(tracer.spanBuilder(anyString())).thenReturn(spanBuilder);
+        when(spanBuilder.setAttribute(anyString(), any())).thenReturn(spanBuilder);
+        when(spanBuilder.setAttribute(anyString(), anyDouble())).thenReturn(spanBuilder);
+        when(spanBuilder.startSpan()).thenReturn(span);
+        when(span.makeCurrent()).thenReturn(mock(Scope.class));
+        riskService = new RiskService(tracer);
     }
 
     @Test

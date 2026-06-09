@@ -4,6 +4,11 @@ import com.example.events.FundsFailed;
 import com.example.events.FundsReserved;
 import com.example.events.RiskApproved;
 import com.example.payment.kafka.PaymentProducer;
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.SpanBuilder;
+import io.opentelemetry.api.trace.Tracer;
+import io.opentelemetry.context.Scope;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -12,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -23,8 +29,26 @@ class PaymentServiceTest {
     @Mock
     private ReserveFundsService reserveFundsService;
 
+    @Mock
+    private Tracer tracer;
+
+    @Mock
+    private SpanBuilder spanBuilder;
+
+    @Mock
+    private Span span;
+
     @InjectMocks
     private PaymentService paymentService;
+
+    @BeforeEach
+    void setUp() {
+        lenient().when(tracer.spanBuilder(anyString())).thenReturn(spanBuilder);
+        lenient().when(spanBuilder.setAttribute(anyString(), any())).thenReturn(spanBuilder);
+        lenient().when(spanBuilder.setAttribute(anyString(), anyDouble())).thenReturn(spanBuilder);
+        lenient().when(spanBuilder.startSpan()).thenReturn(span);
+        lenient().when(span.makeCurrent()).thenReturn(mock(Scope.class));
+    }
 
     @Test
     void processPaymentShouldSendFundsReservedWhenReservationSucceeds() {

@@ -66,37 +66,43 @@ sequenceDiagram
 - `funds-reserved`
 - `funds-failed`
 
-## Build
-
-The project uses a parent POM to manage all modules. Build from the root:
-
-```bash
-# Build and install all modules
-mvn clean install
-```
-
-Or build from root with Spring Boot:
-
-```bash
-# Terminal 1 - loan-service (port 8080)
-mvn -pl loan-service spring-boot:run
-
-# Terminal 2 - risk-service (port 8081)
-mvn -pl risk-service spring-boot:run
-
-# Terminal 3 - payment-service (port 8082)
-mvn -pl payment-service spring-boot:run
-```
-
 ## Prerequisites
 
-- Kafka running on broker:9092
-- Start Kafka with: `cd .devcontainer && docker-compose -f kafka-compose.yml up -d`
+- Docker (para Kafka)
+- Java 17+ y Maven
+
+## Quick Start
+
+```bash
+# 1. Iniciar Kafka
+docker network create kafka-net
+docker compose -f .devcontainer/kafka-compose.yml up -d
+
+# 2. Compilar e iniciar todos los servicios
+./start.sh
+
+# 3. Detener servicios
+./stop.sh
+```
+
+## Build manual
+
+```bash
+mvn clean install -DskipTests
+```
+
+## Run individual
+
+```bash
+mvn -pl loan-service spring-boot:run   # puerto 9080
+mvn -pl risk-service spring-boot:run   # puerto 8081
+mvn -pl payment-service spring-boot:run # puerto 8082
+```
 
 ## Usage
 
 ```bash
-curl -X POST http://localhost:8080/api/loans \
+curl -X POST http://localhost:9080/api/loans \
   -H "Content-Type: application/json" \
   -d '{"customerId": "cust-001", "amount": 10000}'
 ```
@@ -109,7 +115,5 @@ curl -X POST http://localhost:8080/api/loans \
 
 ## OpenAPI / Swagger
 
-Each service exposes OpenAPI documentation:
-
-- **loan-service**: http://localhost:8080/swagger-ui.html
-- **loan-service** (JSON): http://localhost:8080/v3/api-docs
+- **loan-service**: http://localhost:9080/swagger-ui.html
+- **loan-service** (JSON): http://localhost:9080/v3/api-docs

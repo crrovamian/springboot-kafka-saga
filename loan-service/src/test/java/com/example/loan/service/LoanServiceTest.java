@@ -3,6 +3,11 @@ package com.example.loan.service;
 import com.example.loan.entity.Loan;
 import com.example.loan.kafka.LoanProducer;
 import com.example.loan.repository.LoanRepository;
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.SpanBuilder;
+import io.opentelemetry.api.trace.Tracer;
+import io.opentelemetry.context.Scope;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -25,8 +30,26 @@ class LoanServiceTest {
     @Mock
     private LoanProducer loanProducer;
 
+    @Mock
+    private Tracer tracer;
+
+    @Mock
+    private SpanBuilder spanBuilder;
+
+    @Mock
+    private Span span;
+
     @InjectMocks
     private LoanService loanService;
+
+    @BeforeEach
+    void setUp() {
+        lenient().when(tracer.spanBuilder(anyString())).thenReturn(spanBuilder);
+        lenient().when(spanBuilder.setAttribute(anyString(), any())).thenReturn(spanBuilder);
+        lenient().when(spanBuilder.setAttribute(anyString(), anyDouble())).thenReturn(spanBuilder);
+        lenient().when(spanBuilder.startSpan()).thenReturn(span);
+        lenient().when(span.makeCurrent()).thenReturn(mock(Scope.class));
+    }
 
     @Test
     void createLoanShouldSaveWithPendingStatusAndSendEvent() {
