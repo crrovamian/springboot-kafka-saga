@@ -97,20 +97,20 @@ OTEL_LOGS_EXPORTER=none
 
 ## Prerequisites
 
-- Docker (para Kafka)
-- Java 17+ y Maven
+- Docker (for Kafka)
+- Java 17+ and Maven
 
 ## Quick Start
 
 ```bash
-# 1. Iniciar Kafka
+# 1. Start Kafka
 docker network create kafka-net
 docker compose -f .devcontainer/kafka-compose.yml up -d
 
-# 2. Compilar e iniciar todos los servicios
+# 2. Build and start all services
 ./start.sh
 
-# 3. Detener servicios
+# 3. Stop services
 ./stop.sh
 ```
 
