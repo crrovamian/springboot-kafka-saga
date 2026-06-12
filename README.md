@@ -53,10 +53,39 @@ sequenceDiagram
 ```
 
 **Compensation**: On failure at any step, the saga publishes a compensating event to rollback the previous steps.
-2. `loan-service` publishes `LoanRequested` event to Kafka
-3. `risk-service` consumes the event, evaluates risk, publishes `RiskApproved` or `RiskRejected`
-4. `payment-service` consumes `RiskApproved`, processes payment, publishes `FundsReserved` or `FundsFailed`
-5. `loan-service` consumes the final event and updates loan status
+
+## Resilience4j
+
+Fault tolerance patterns applied with [Resilience4j](https://resilience4j.readme.io/):
+
+| Pattern | Instance | Module | Usage |
+|---------|----------|--------|-------|
+| Circuit Breaker | `loanConsumerCircuitBreaker` | loan-service | `LoanConsumer` (3 Kafka listeners) |
+| Retry | `loanRetry` | loan-service | `LoanProducer.sendLoanRequested()` |
+| Retry | `riskRetry` | risk-service | `RiskService.evaluateRisk()` |
+| Circuit Breaker | `paymentCircuitBreaker` | payment-service | `PaymentService.processPayment()` |
+| Retry + fallback | `paymentRetry` | payment-service | `ReserveFundsService.reserveFunds()` |
+
+## OpenTelemetry / Distributed Tracing
+
+Each service is instrumented with [OpenTelemetry](https://opentelemetry.io/) (SDK v1.38.0) for distributed tracing:
+
+- **Auto-configuration**: `AutoConfiguredOpenTelemetrySdk` with `otel.service.name` set per module
+- **Manual tracing**: `Tracer.spanBuilder()` in `LoanService`, `RiskService`, `PaymentService` and `ReserveFundsService`
+- **Kafka**: `TracingProducerInterceptor` / `TracingConsumerInterceptor` on all producers and consumers, propagating tracing context through messages
+- **HTTP**: `SpringWebMvcTelemetry` filter to automatically trace incoming REST requests
+- **Exporter**: OTLP via gRPC to `otel-collector:4317`
+- **Propagation**: W3C `tracecontext` + `baggage`
+
+Required environment variables for the collector:
+
+```env
+OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+OTEL_TRACES_EXPORTER=otlp
+OTEL_PROPAGATORS=tracecontext,baggage
+OTEL_METRICS_EXPORTER=none
+OTEL_LOGS_EXPORTER=none
+```
 
 ## Kafka Topics
 
